@@ -19,6 +19,7 @@ class MediaFile(models.Model):
     media_type = models.CharField(max_length=20, choices=MediaType.choices)
     file = models.FileField(upload_to='uploads/%Y/%m/%d/')
     deepfake_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    confidence = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     analysis_result = models.JSONField(default=dict, blank=True)
     status = models.CharField(max_length=20, choices=AnalysisStatus.choices, default=AnalysisStatus.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)

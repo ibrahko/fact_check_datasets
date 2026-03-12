@@ -1,8 +1,8 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import MediaFileViewSet
+from .views import MediaFileUploadView
 
 router = DefaultRouter()
-router.register('', MediaFileViewSet, basename='media-file')
+router.register('', MediaFileUploadView, basename='media-file')
 
 urlpatterns = router.urls
