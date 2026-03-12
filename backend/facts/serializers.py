@@ -4,8 +4,6 @@ from .models import FactCheck
 
 
 class FactCheckSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
-
     class Meta:
         model = FactCheck
         fields = '__all__'
@@ -15,4 +13,4 @@ class FactCheckSerializer(serializers.ModelSerializer):
 class FactCheckCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FactCheck
-        fields = ['title', 'source_url', 'raw_input', 'content_type']
+        fields = ['title', 'source_url', 'raw_input', 'content_type', 'is_public']
