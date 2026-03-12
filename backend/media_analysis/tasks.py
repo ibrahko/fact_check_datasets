@@ -23,24 +23,10 @@ def process_media_file(self, media_file_id: int):
     service = CheckIAService()
 
     try:
-        if media_file.media_type == MediaFile.MediaType.IMAGE:
-            result = service.analyze_image(media_file.file.path)
-            media_file.deepfake_score = _to_decimal(result.get('deepfake_score', 0))
-            media_file.analysis_result = result
-            media_file.confidence = _to_decimal(result.get('deepfake_score', 0))
-        elif media_file.media_type == MediaFile.MediaType.AUDIO:
-            transcript = media_file.fact_check.raw_input
-            result = service.analyze_audio_transcript(transcript)
-            media_file.analysis_result = result
-            media_file.deepfake_score = _to_decimal(result.get('confidence_score', 0))
-            media_file.confidence = _to_decimal(result.get('confidence_score', 0))
-        else:
-            fallback_text = media_file.fact_check.raw_input
-            result = service.analyze_text(fallback_text)
-            media_file.analysis_result = result
-            media_file.deepfake_score = _to_decimal(result.get('confidence_score', 0))
-            media_file.confidence = _to_decimal(result.get('confidence_score', 0))
-
+        score, result = service.analyze_media(media_file)
+        media_file.deepfake_score = _to_decimal(score)
+        media_file.confidence = _to_decimal(score)
+        media_file.analysis_result = result
         media_file.status = MediaFile.AnalysisStatus.DONE
         media_file.save(update_fields=['analysis_result', 'deepfake_score', 'confidence', 'status'])
         return media_file.analysis_result
