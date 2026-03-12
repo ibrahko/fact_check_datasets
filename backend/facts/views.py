@@ -70,3 +70,11 @@ class UserFactChecksView(generics.ListAPIView):
 
     def get_queryset(self):
         return FactCheck.objects.filter(user=self.request.user)
+
+
+class TrendingFactChecksView(generics.ListAPIView):
+    serializer_class = FactCheckSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return FactCheck.objects.filter(is_public=True).select_related('user')[:10]

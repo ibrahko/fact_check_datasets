@@ -21,6 +21,7 @@ class FactCheck(models.Model):
     source_url = models.URLField(blank=True)
     raw_input = models.TextField()
     content_type = models.CharField(max_length=20, choices=ContentType.choices)
+    is_public = models.BooleanField(default=True)
     ai_summary = models.TextField(blank=True)
     verdict = models.CharField(max_length=20, choices=Verdict.choices, default=Verdict.UNKNOWN)
     confidence_score = models.DecimalField(max_digits=5, decimal_places=2, default=0)
