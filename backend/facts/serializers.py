@@ -4,9 +4,26 @@ from .models import FactCheck
 
 
 class FactCheckSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
+    created_by = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = FactCheck
-        fields = '__all__'
-        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+        fields = [
+            'id',
+            'title',
+            'content',
+            'source_url',
+            'verdict',
+            'confidence_score',
+            'explanation',
+            'created_by',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields = ['id', 'created_by', 'created_at', 'updated_at']
+
+
+class FactCheckCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FactCheck
+        fields = ['title', 'content', 'source_url']

@@ -1,8 +1,9 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import MediaFileViewSet
+from .views import MediaFileDetailView, MediaFileListView, MediaFileUploadView
 
-router = DefaultRouter()
-router.register('', MediaFileViewSet, basename='media-file')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('upload/', MediaFileUploadView.as_view(), name='media-upload'),
+    path('my-files/', MediaFileListView.as_view(), name='media-list'),
+    path('<int:pk>/', MediaFileDetailView.as_view(), name='media-detail'),
+]

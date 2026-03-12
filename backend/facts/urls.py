@@ -1,8 +1,10 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import FactCheckViewSet
+from .views import FactCheckCreateView, FactCheckDetailView, FactCheckListView, UserFactChecksView
 
-router = DefaultRouter()
-router.register('', FactCheckViewSet, basename='fact-check')
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('', FactCheckListView.as_view(), name='fact-check-list'),
+    path('create/', FactCheckCreateView.as_view(), name='fact-check-create'),
+    path('my-checks/', UserFactChecksView.as_view(), name='user-fact-checks'),
+    path('<int:pk>/', FactCheckDetailView.as_view(), name='fact-check-detail'),
+]
