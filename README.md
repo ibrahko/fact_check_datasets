@@ -111,3 +111,51 @@ Puis lancer sur simulateur ou Expo Go:
 ## 5) Notes IA & Deepfake
 
 Cette étape initialise les structures de données et les écrans. L'intégration des modèles IA (OpenAI et détection deepfake) sera branchée dans les services backend de `facts` et `media_analysis` à l'étape suivante.
+
+## 6) Déploiement production
+
+Le déploiement se fait en 2 parties :
+
+- **Backend Django** sur Railway
+- **Application mobile** via EAS Build (APK Android)
+
+### Backend sur Railway (Django)
+
+1. Créer un projet sur Railway puis connecter le repo GitHub.
+2. Ajouter un service Web qui pointe sur la racine du repo.
+3. Railway détecte `railway.json` et exécute la commande de démarrage Gunicorn.
+4. Configurer les variables d'environnement Railway (voir `backend/.env.production.example`).
+5. Vérifier que la base PostgreSQL Railway est créée puis récupérer son `DATABASE_URL`.
+6. Déployer : le script `backend/build.sh` exécute les migrations et `collectstatic`.
+
+Variables recommandées côté Railway :
+
+- `DEBUG=False`
+- `SECRET_KEY=<clé-longue-et-aléatoire>`
+- `DATABASE_URL=<url-postgresql-railway>`
+- `OPENAI_API_KEY=<clé-openai>`
+- `ALLOWED_HOSTS=check-ia-backend.railway.app`
+- `CORS_ALLOWED_ORIGINS=https://votre-app-mobile.expo.dev`
+
+### Mobile Expo (EAS Build APK)
+
+1. Installer EAS CLI :
+   ```bash
+   npm install -g eas-cli
+   ```
+2. Se connecter :
+   ```bash
+   eas login
+   ```
+3. Dans `mobile/`, copier l'exemple d'env :
+   ```bash
+   cp .env.example .env
+   ```
+4. Vérifier `EXPO_PUBLIC_API_URL` vers le backend Railway.
+5. Lancer le build APK preview :
+   ```bash
+   eas build -p android --profile preview
+   ```
+6. Télécharger l'APK depuis le lien EAS fourni en sortie.
+
+> Guide détaillé : voir `DEPLOYMENT.md`.
