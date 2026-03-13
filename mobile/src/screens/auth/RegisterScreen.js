@@ -48,29 +48,15 @@ export default function RegisterScreen({ navigation }) {
       password,
     };
 
-    const registerEndpoints = ['/auth/register/', '/users/', '/auth/registration/'];
-
     try {
-      let registrationError;
-
-      for (const endpoint of registerEndpoints) {
-        try {
-          await api.post(endpoint, payload, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          navigation.navigate('Login', {
-            successMessage: 'Compte créé avec succès. Connectez-vous pour continuer.',
-          });
-          return;
-        } catch (err) {
-          registrationError = err;
-          console.log(`[RegisterScreen] Registration failed on ${endpoint}:`, err?.response?.status, err?.response?.data || err.message);
-        }
-      }
-
-      throw registrationError;
+      await api.post('/auth/register/', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      navigation.navigate('Login', {
+        successMessage: 'Compte créé avec succès. Connectez-vous pour continuer.',
+      });
     } catch (err) {
       const message = getErrorMessage(err, 'Impossible de créer le compte pour le moment.');
       setError(message);
