@@ -130,9 +130,13 @@ if railway_origin not in CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS.append(railway_origin)
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
+railway_public_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN', '').strip()
+if railway_public_domain and not railway_public_domain.startswith(('https://', 'http://')):
+    railway_public_domain = f'https://{railway_public_domain}'
+
 CSRF_TRUSTED_ORIGINS = [
     'https://factcheckdatasets-production.up.railway.app',
-    os.getenv('RAILWAY_PUBLIC_DOMAIN', ''),
+    *([railway_public_domain] if railway_public_domain else []),
 ]
 
 SESSION_COOKIE_SECURE = not DEBUG
