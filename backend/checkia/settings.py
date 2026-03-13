@@ -130,6 +130,14 @@ if railway_origin not in CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS.append(railway_origin)
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://factcheckdatasets-production.up.railway.app',
+    os.getenv('RAILWAY_PUBLIC_DOMAIN', ''),
+]
+
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
@@ -146,8 +154,6 @@ if os.getenv('SQLITE_FOR_TESTS', 'False') == 'True':
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '31536000'))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
