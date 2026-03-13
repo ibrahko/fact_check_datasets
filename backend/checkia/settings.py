@@ -60,6 +60,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'checkia.wsgi.application'
 ASGI_APPLICATION = 'checkia.asgi.application'
 
+DATABASE_URL = os.getenv('DATABASE_URL', '').strip()
+
 if os.getenv('SQLITE_FOR_TESTS', 'False') == 'True':
     DATABASES = {
         'default': {
@@ -67,10 +69,10 @@ if os.getenv('SQLITE_FOR_TESTS', 'False') == 'True':
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-elif os.getenv('DATABASE_URL'):
+elif DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
+        'default': dj_database_url.parse(
+            DATABASE_URL,
             conn_max_age=600,
             ssl_require=not DEBUG,
         )
