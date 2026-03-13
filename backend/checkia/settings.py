@@ -124,11 +124,11 @@ SESSION_ENGINE = os.getenv('SESSION_ENGINE', 'django.contrib.sessions.backends.d
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 cors_origins_raw = os.getenv('CORS_ALLOWED_ORIGINS', '')
-CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_raw.split(',') if origin.strip()]
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_raw.split(',') if origin.strip() and origin.strip() != '*']
 railway_origin = 'https://factcheckdatasets-production.up.railway.app'
 if railway_origin not in CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS.append(railway_origin)
-CORS_ALLOW_ALL_ORIGINS = not bool(CORS_ALLOWED_ORIGINS)
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
 
