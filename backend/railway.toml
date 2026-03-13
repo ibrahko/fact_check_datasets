@@ -1,6 +1,6 @@
 [build]
-buildCommand = "pip install -r requirements.txt && bash build.sh"
+buildCommand = "bash build.sh"
 
 [deploy]
-startCommand = "gunicorn checkia.wsgi:application --bind 0.0.0.0:$PORT"
+startCommand = "python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && gunicorn checkia.wsgi:application --bind 0.0.0.0:$PORT"
 healthcheckPath = "/admin/"
