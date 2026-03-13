@@ -42,7 +42,8 @@ export default function LoginScreen({ navigation, route }) {
         username,
         password,
       });
-      await saveTokens(response.data);
+      // L'API retourne { user: {...}, tokens: { access, refresh } }
+      await saveTokens(response.data.tokens);
       navigation.replace('Main');
     } catch (err) {
       const message = getErrorMessage(err, 'Impossible de se connecter. Vérifiez vos identifiants.');
