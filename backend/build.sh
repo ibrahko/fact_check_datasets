@@ -5,8 +5,8 @@ STATIC_ROOT="${STATIC_ROOT:-/app/staticfiles}"
 export STATIC_ROOT
 
 mkdir -p "${STATIC_ROOT}"
-python manage.py collectstatic --noinput --clear -v 2
 python manage.py migrate --noinput
+python manage.py collectstatic --noinput --clear -v 2
 python manage.py showmigrations --plan
 python manage.py shell -c "from django.db import connections; connections['default'].cursor(); print('Database connection OK')"
 
