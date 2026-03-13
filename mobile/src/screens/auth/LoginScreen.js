@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import ScreenContainer from '../../components/ScreenContainer';
 import api, { saveTokens } from '../../services/api';
 
 const getErrorMessage = (error, fallbackMessage) => {
@@ -19,6 +27,7 @@ export default function LoginScreen({ navigation, route }) {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [focusedField, setFocusedField] = useState(null);
 
   const successMessage = route?.params?.successMessage;
 
@@ -47,65 +56,148 @@ export default function LoginScreen({ navigation, route }) {
   };
 
   return (
-    <ScreenContainer
-      title="Bienvenue sur Check-IA"
-      description="Connectez-vous pour accéder aux vérifications, analyses média et historique personnalisé."
-    >
+    <View style={styles.screen}>
+      <View style={styles.header}>
+        <Text style={styles.logoIcon}>🛡️</Text>
+        <Text style={styles.logoText}>CHECK-IA</Text>
+        <Text style={styles.subtitle}>Vérifiez. Analysez. Protégez.</Text>
+        <Text style={styles.tagline}>Combattre la désinformation avec l'intelligence artificielle</Text>
+      </View>
+
       <View style={styles.card}>
         {successMessage ? <Text style={styles.success}>{successMessage}</Text> : null}
         {error ? <Text style={styles.error}>{error}</Text> : null}
+
         <Text style={styles.label}>Nom d'utilisateur</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, focusedField === 'username' && styles.inputFocused]}
           placeholder="ex: ibrahko"
+          placeholderTextColor="#475569"
           autoCapitalize="none"
           value={username}
           onChangeText={setUsername}
           editable={!loading}
+          onFocus={() => setFocusedField('username')}
+          onBlur={() => setFocusedField(null)}
         />
+
         <Text style={styles.label}>Mot de passe</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, focusedField === 'password' && styles.inputFocused]}
           placeholder="••••••••"
+          placeholderTextColor="#475569"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
           editable={!loading}
+          onFocus={() => setFocusedField('password')}
+          onBlur={() => setFocusedField(null)}
         />
-        {loading ? <ActivityIndicator size="small" color="#1D3557" /> : null}
-        <Button title="Se connecter" onPress={handleLogin} disabled={loading} />
+
+        {loading ? <ActivityIndicator size="small" color="#00D4FF" /> : null}
+
+        <TouchableOpacity style={styles.primaryButton} onPress={handleLogin} disabled={loading}>
+          <Text style={styles.primaryButtonText}>Se connecter</Text>
+        </TouchableOpacity>
+
+        <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate('Register')} disabled={loading}>
+          <Text style={styles.secondaryButtonText}>Créer un compte</Text>
+        </Pressable>
       </View>
-      <Button title="Créer un compte" onPress={() => navigation.navigate('Register')} disabled={loading} />
-    </ScreenContainer>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#0A0E1A',
+    paddingHorizontal: 20,
+    paddingTop: 48,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  logoIcon: {
+    fontSize: 56,
+    marginBottom: 8,
+  },
+  logoText: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: '#00D4FF',
+    letterSpacing: 1,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontWeight: '700',
+    marginTop: 6,
+  },
+  tagline: {
+    marginTop: 10,
+    textAlign: 'center',
+    color: '#94A3B8',
+    fontSize: 13,
+    lineHeight: 20,
+  },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
+    backgroundColor: '#111827',
+    borderRadius: 18,
+    padding: 18,
     gap: 8,
+    borderWidth: 1,
+    borderColor: '#1E293B',
   },
   label: {
     fontWeight: '600',
-    color: '#1D3557',
+    color: '#FFFFFF',
+    marginTop: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#DDE3EA',
-    borderRadius: 10,
+    borderColor: '#1E293B',
+    borderRadius: 12,
     paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 8,
-    backgroundColor: '#FAFCFF',
+    paddingVertical: 12,
+    marginBottom: 4,
+    backgroundColor: '#111827',
+    color: '#FFFFFF',
+  },
+  inputFocused: {
+    borderColor: '#00D4FF',
   },
   error: {
-    color: '#D90429',
-    marginBottom: 8,
+    color: '#EF4444',
+    marginBottom: 6,
   },
   success: {
-    color: '#2A9D8F',
-    marginBottom: 8,
+    color: '#10B981',
+    marginBottom: 6,
+  },
+  primaryButton: {
+    marginTop: 10,
+    backgroundColor: '#00D4FF',
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  primaryButtonText: {
+    color: '#0A0E1A',
+    fontSize: 16,
+    fontWeight: '800',
+  },
+  secondaryButton: {
+    marginTop: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#00D4FF',
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+  secondaryButtonText: {
+    color: '#00D4FF',
+    fontWeight: '700',
   },
 });
