@@ -2,4 +2,4 @@
 buildCommand = "bash build.sh"
 
 [deploy]
-startCommand = "python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && gunicorn checkia.wsgi:application --bind 0.0.0.0:$PORT"
+startCommand = "python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_USERNAME:-admin} --email ${DJANGO_SUPERUSER_EMAIL:-admin@checkia.app} || true && gunicorn checkia.wsgi:application --bind 0.0.0.0:$PORT"
