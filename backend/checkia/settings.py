@@ -9,6 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', os.getenv('DJANGO_SECRET_KEY', 'change-me-in-production'))
 DEBUG = os.getenv('DEBUG', os.getenv('DJANGO_DEBUG', 'True')) == 'True'
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', os.getenv('DJANGO_ALLOWED_HOSTS', '*')).split(',') if host.strip()]
+if '.railway.app' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('.railway.app')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -117,6 +119,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 cors_origins_raw = os.getenv('CORS_ALLOWED_ORIGINS', '')
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_raw.split(',') if origin.strip()]
+railway_origin = 'https://factcheckdatasets-production.up.railway.app'
+if railway_origin not in CORS_ALLOWED_ORIGINS:
+    CORS_ALLOWED_ORIGINS.append(railway_origin)
 CORS_ALLOW_ALL_ORIGINS = not bool(CORS_ALLOWED_ORIGINS)
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')

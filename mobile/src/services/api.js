@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000/api',
+  baseURL: process.env.EXPO_PUBLIC_API_URL || 'https://factcheckdatasets-production.up.railway.app/api',
   timeout: 15000,
 });
 
