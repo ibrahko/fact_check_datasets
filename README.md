@@ -159,3 +159,9 @@ Variables recommandées côté Railway :
 6. Télécharger l'APK depuis le lien EAS fourni en sortie.
 
 > Guide détaillé : voir `DEPLOYMENT.md`.
+
+## 7) URLs de Production
+
+- Backend API: https://factcheckdatasets-production.up.railway.app
+- Admin Django: https://factcheckdatasets-production.up.railway.app/admin
+- API Docs: https://factcheckdatasets-production.up.railway.app/api/
