@@ -7,7 +7,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+      "postinstall": "python3 ../scripts/generate_mobile_asset_placeholders.py"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.6.1",
