@@ -5,8 +5,7 @@
   "build": {
     "preview": {
       "android": {
-        "buildType": "apk",
-        "prebuildCommand": "python3 ../scripts/generate_mobile_asset_placeholders.py"
+        "buildType": "apk"
       }
     },
     "production": {
