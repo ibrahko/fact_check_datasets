@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -28,6 +31,7 @@ export default function LoginScreen({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [focusedField, setFocusedField] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const successMessage = route?.params?.successMessage;
 
@@ -56,55 +60,71 @@ export default function LoginScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.header}>
-        <Text style={styles.logoIcon}>🛡️</Text>
-        <Text style={styles.logoText}>CHECK-IA</Text>
-        <Text style={styles.subtitle}>Vérifiez. Analysez. Protégez.</Text>
-        <Text style={styles.tagline}>Combattre la désinformation avec l'intelligence artificielle</Text>
-      </View>
+    <KeyboardAvoidingView
+      style={styles.screen}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Text style={styles.logoIcon}>🛡️</Text>
+          <Text style={styles.logoText}>CHECK-IA</Text>
+          <Text style={styles.subtitle}>Vérifiez. Analysez. Protégez.</Text>
+          <Text style={styles.tagline}>Combattre la désinformation avec l'intelligence artificielle</Text>
+        </View>
 
-      <View style={styles.card}>
-        {successMessage ? <Text style={styles.success}>{successMessage}</Text> : null}
-        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <View style={styles.card}>
+          <View style={styles.feedbackContainer}>
+            {successMessage ? <Text style={styles.success}>{successMessage}</Text> : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+          </View>
 
-        <Text style={styles.label}>Nom d'utilisateur</Text>
-        <TextInput
-          style={[styles.input, focusedField === 'username' && styles.inputFocused]}
-          placeholder="ex: ibrahko"
-          placeholderTextColor="#475569"
-          autoCapitalize="none"
-          value={username}
-          onChangeText={setUsername}
-          editable={!loading}
-          onFocus={() => setFocusedField('username')}
-          onBlur={() => setFocusedField(null)}
-        />
+          <Text style={styles.label}>Nom d'utilisateur</Text>
+          <TextInput
+            style={[styles.input, focusedField === 'username' && styles.inputFocused]}
+            placeholder="ex: ibrahko"
+            placeholderTextColor="#475569"
+            autoCapitalize="none"
+            value={username}
+            onChangeText={setUsername}
+            editable={!loading}
+            onFocus={() => setFocusedField('username')}
+            onBlur={() => setFocusedField(null)}
+          />
 
-        <Text style={styles.label}>Mot de passe</Text>
-        <TextInput
-          style={[styles.input, focusedField === 'password' && styles.inputFocused]}
-          placeholder="••••••••"
-          placeholderTextColor="#475569"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          editable={!loading}
-          onFocus={() => setFocusedField('password')}
-          onBlur={() => setFocusedField(null)}
-        />
+          <Text style={styles.label}>Mot de passe</Text>
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={[styles.input, styles.passwordInput, focusedField === 'password' && styles.inputFocused]}
+              placeholder="••••••••"
+              placeholderTextColor="#475569"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
+              editable={!loading}
+              onFocus={() => setFocusedField('password')}
+              onBlur={() => setFocusedField(null)}
+            />
+            <Pressable style={styles.passwordToggle} onPress={() => setShowPassword((prev) => !prev)}>
+              <Text style={styles.passwordToggleText}>{showPassword ? '🙈' : '👁'}</Text>
+            </Pressable>
+          </View>
 
-        {loading ? <ActivityIndicator size="small" color="#00D4FF" /> : null}
+          {loading ? <ActivityIndicator size="small" color="#00D4FF" /> : null}
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleLogin} disabled={loading}>
-          <Text style={styles.primaryButtonText}>Se connecter</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.primaryButton} onPress={handleLogin} disabled={loading}>
+            <Text style={styles.primaryButtonText}>Se connecter</Text>
+          </TouchableOpacity>
 
-        <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate('Register')} disabled={loading}>
-          <Text style={styles.secondaryButtonText}>Créer un compte</Text>
-        </Pressable>
-      </View>
-    </View>
+          <Pressable style={styles.secondaryButton} onPress={() => navigation.navigate('Register')} disabled={loading}>
+            <Text style={styles.secondaryButtonText}>Créer un compte</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -112,8 +132,11 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#0A0E1A',
+  },
+  scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 48,
+    paddingBottom: 40,
   },
   header: {
     alignItems: 'center',
@@ -150,10 +173,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#1E293B',
   },
+  feedbackContainer: {
+    minHeight: 24,
+    justifyContent: 'center',
+  },
   label: {
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#FFFFFF',
     marginTop: 6,
+    marginBottom: 6,
   },
   input: {
     borderWidth: 1,
@@ -168,13 +196,26 @@ const styles = StyleSheet.create({
   inputFocused: {
     borderColor: '#00D4FF',
   },
+  passwordContainer: {
+    position: 'relative',
+  },
+  passwordInput: {
+    paddingRight: 44,
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 12,
+    top: 11,
+  },
+  passwordToggleText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+  },
   error: {
     color: '#EF4444',
-    marginBottom: 6,
   },
   success: {
     color: '#10B981',
-    marginBottom: 6,
   },
   primaryButton: {
     marginTop: 10,
