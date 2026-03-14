@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'mobile/**'
 
 jobs:
   build-android:
@@ -27,11 +29,9 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: |
-          cd mobile
-          npm ci
+        working-directory: mobile
+        run: npm ci
 
-      - name: Build Android APK (preview profile)
-        run: |
-          cd mobile
-          eas build --platform android --profile preview --non-interactive
+      - name: Build Android APK
+        working-directory: mobile
+        run: eas build --platform android --profile preview --non-interactive
